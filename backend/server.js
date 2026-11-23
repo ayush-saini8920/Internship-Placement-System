@@ -10,7 +10,12 @@ const app = express();
 const PORT = Number(process.env.PORT || 5001);
 const SHORTLIST_SCORE = 70;
 
-app.use(cors({ origin: "http://localhost:5173" }));
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    process.env.FRONTEND_URL
+  ].filter(Boolean)
+}));
 app.use(express.json());
 
 // Home route
@@ -677,5 +682,5 @@ app.get("/api/reports/placements", async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Backend running at http://localhost:${PORT}`);
+  console.log(`Backend running on port ${PORT}`);
 });
