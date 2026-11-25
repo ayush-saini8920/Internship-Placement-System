@@ -1,6 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
 
-const API = `${import.meta.env.VITE_API_URL || "http://localhost:5001"}/api`;
+const defaultApiUrl = import.meta.env.PROD
+  ? "https://internship-placement-system-mprk.vercel.app"
+  : "http://localhost:5001";
+const API = `${import.meta.env.VITE_API_URL || defaultApiUrl}/api`;
 
 function money(value) {
   return new Intl.NumberFormat("en-IN", {
