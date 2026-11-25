@@ -384,14 +384,15 @@ app.get("/api/applications", async (req, res) => {
          ON i.internship_id = a.internship_id
        JOIN Companies c
          ON c.company_id = i.company_id
-       LEFT JOIN Interviews iv
-         ON iv.interview_id = (
-           SELECT iv2.interview_id
-           FROM Interviews iv2
-           WHERE iv2.application_id = a.application_id
-           ORDER BY iv2.interview_date DESC, iv2.interview_id DESC
-           LIMIT 1
-         )
+       LEFT JOIN (
+         SELECT Interviews.*,
+                ROW_NUMBER() OVER (
+                  PARTITION BY application_id
+                  ORDER BY interview_date DESC, interview_id DESC
+                ) AS interview_rank
+         FROM Interviews
+       ) iv
+         ON iv.application_id = a.application_id AND iv.interview_rank = 1
        ORDER BY a.applied_on DESC`
     );
 
